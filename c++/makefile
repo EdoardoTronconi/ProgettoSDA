@@ -1,5 +1,3 @@
-X:=.x
-
 make:
 	make main.x
 
