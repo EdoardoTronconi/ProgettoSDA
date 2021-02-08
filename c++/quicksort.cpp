@@ -13,17 +13,17 @@ Iterator partition(Iterator start, Iterator end, bool randomized){
     // se randomized scambio l'ultimo elemento nel vettore con uno casuale
     if (randomized == true) {
         std::iter_swap(
-                end - 1,
+                std::prev(end,1),
                 next(start, rand() % std::distance(start, end) )
                  );
     }
     
     //scelgo come pivot l'indice dell'ultimo elemento
-    Iterator pivot = end - 1;
+    Iterator pivot = std::prev(end,1);
     
     //metto a sx tutti i valori minori di pivot e a dx tutti quelli maggiori
     Iterator i = start;
-    for (auto j=start; j!=end - 1; j++){
+    for (auto j=start; j!=pivot; j++){
         if (*j <= *pivot) {std::iter_swap(i++,j);}
     }
     std::iter_swap(i,pivot);

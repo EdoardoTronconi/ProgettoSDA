@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-#include "insertionsort.cpp"
+#include "heapsort.cpp"
 using namespace std;
 
 template <typename T>
@@ -13,11 +13,12 @@ void print(vector<T> V){
 }
 
 int main(){
-    vector<double> V = {1,6,3,5,0,2,7,9,8,4};
-    cout << "VETTORE: "; print(V);
+    vector<double> V = {2,1,7,6,9,8,3,4,5,10};
     
-    insertionsort(V.begin(), V.end());
+    print(V);
     
-    cout << "VETTORE dopo IS: "; print(V);
-    cout << *--V.end();
+    heapsort(V.begin(), V.end());
+    
+    print(V);
+    
 }
