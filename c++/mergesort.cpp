@@ -1,21 +1,41 @@
 /*
  ORDINA ELEMENTI NEL RANGE [start, end)
- da: https://gist.github.com/svdamani/dc57e4d1b00342d4507d
- */
+*/
 
 #ifndef MERGESORT
 #define MERGESORT
-#include<algorithm>
+#include <vector>
 
 template <class Iterator>
-inline void mergesort(Iterator begin, Iterator end) {
-    if (end <= begin + 1) return;
-    Iterator middle = begin + (end - begin) / 2;
-    mergesort(begin, middle);
-    mergesort(middle, end);
-    std::inplace_merge(begin, middle, end);
+void merge(Iterator start, Iterator middle, Iterator end){
+    
+    std::vector<typename Iterator::value_type> buffer;
+    buffer.reserve(std::distance(start, end));
+    
+    Iterator left(start), right(middle);
+    const Iterator mid_(middle), end_(end);
+    
+    while ((left != mid_) and (right != end_) ) buffer.push_back( (*left <= *right) ? *left++ : *right++);
+    
+    buffer.insert(buffer.end(), left, mid_);
+    buffer.insert(buffer.end(), right, end_);
+    
+    std::move(buffer.begin(), buffer.end(), start);
+    
 }
 
+
+template <class Iterator>
+inline void mergesort(Iterator start, Iterator end) {
+    if (distance(start,end)>1){
+        Iterator middle = start + distance(start,end)/2;
+        
+        mergesort(start, middle);
+        mergesort(middle, end);
+        
+        merge(start, middle, end);
+    }
+}
 
 
 #endif
