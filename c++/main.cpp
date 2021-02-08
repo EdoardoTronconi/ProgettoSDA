@@ -6,21 +6,13 @@
 #include <algorithm>
 #include <numeric>
 #include <ctime>
+
 #include "quicksort.cpp"
 #include "mergesort.cpp"
 #include "insertionsort.cpp"
+#include "heapsort.cpp"
 
 using namespace std;
-
-template <typename T>
-void print(vector<T> V){
-    
-    for (auto el : V){
-        cout << el << " ";
-    }
-    cout << endl;
-}
-
 
 int main(int argc, char * argv[]) {
     /*
@@ -32,7 +24,7 @@ int main(int argc, char * argv[]) {
         '-trials=...'           -> ... = numero di prove (default 1)
         '-size=...'             -> ... = dimensione vettore (default 1000)
         '-seed=...'             -> ... = seed generatore num casuali (o '-seed=time' per srand(time(NULL)) )
-        '-algo=...'             -> ... = algoritmo da testare (opzioni: STL, QS, IS, MS o '-algo=all' per testarli tutti (default))
+        '-algo=...'             -> ... = algoritmo da testare (opzioni: STL, QS, IS, MS, HS o '-algo=all' per testarli tutti (default))
     
         '--randomized' o '-r'   -> usa randomized quicksort (default false)
         '--sorted'     o '-s'   -> ordina un vettore già ordinato (default false)
@@ -74,6 +66,7 @@ int main(int argc, char * argv[]) {
             if (arg.find("QS") != -1 ) algo+="_QS_";
             if (arg.find("IS") != -1 ) algo+="_IS_";
             if (arg.find("MS") != -1 ) algo+="_MS_";
+            if (arg.find("HS") != -1 ) algo+="_HS_";
         }
     }
     }
@@ -81,12 +74,13 @@ int main(int argc, char * argv[]) {
 //*******************************************************************************************************************//
     
     //Vettori per contenere i tempi di esecuzione
-    vector<double> trialsSTLsort;
-    vector<double> trialsInsertionsort;
-    vector<double> trialsQuicksort;
-    vector<double> trialsMergesort;
+    vector<long long> trialsSTLsort;
+    vector<long long> trialsInsertionsort;
+    vector<long long> trialsQuicksort;
+    vector<long long> trialsMergesort;
+    vector<long long> trialsHeapsort;
     
-    //ripeto per 'trials' volte
+    //Test ripetuto trials volte
     for (int trial=1; trial<=trials; trial++){
         
         // creo vettore da ordinare
@@ -155,17 +149,31 @@ int main(int argc, char * argv[]) {
              
             trialsMergesort.push_back(duration);
         }
-         
+        
+        //Heapsort
+        if (algo.find("_HS_") != -1  or algo.find("_all_") != -1 ){
+            auto vec = vec_;
+            auto t1 = std::chrono::high_resolution_clock::now();
+            heapsort(vec.begin(), vec.end());
+            auto t2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count();
+            
+            if (!is_sorted(vec.begin(), vec.end()) and debug) {cerr << "\nErrore: Heapsort non ordinato";}
+             
+            trialsHeapsort.push_back(duration);
+        }
         
         
     }
 
-    //stampo tempi medi
+    //stampo tempi medi su terminale
     if (verbose){
         if (algo.find("_STL_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio STLsort: "<< int(accumulate(trialsSTLsort.begin(), trialsSTLsort.end(), 0.) / trialsSTLsort.size())<<" ns";
         if (algo.find("_IS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Insertionsort: "<< int(accumulate(trialsInsertionsort.begin(), trialsInsertionsort.end(), 0.) / trialsInsertionsort.size())<<" ns";
         if (algo.find("_QS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Quicksort: "<< int(accumulate(trialsQuicksort.begin(), trialsQuicksort.end(), 0.) / trialsQuicksort.size())<<" ns";
         if (algo.find("_MS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Mergesort: "<< int(accumulate(trialsMergesort.begin(), trialsMergesort.end(), 0.) / trialsMergesort.size())<<" ns";
+        if (algo.find("_HS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Heapsort: "<< int(accumulate(trialsHeapsort.begin(), trialsHeapsort.end(), 0.) / trialsHeapsort.size())<<" ns";
+
     }
     
     //Output su file
@@ -178,7 +186,7 @@ int main(int argc, char * argv[]) {
         ofstream os;
         
         if (algo.find("_STL_") != -1  or algo.find("_all_") != -1 ){
-            os.open("./Risultati/STLsort/tempiOrdinamento_"+size_+"elementi"+sorted+random+pochiVal+".txt");
+            os.open("./Risultati/STLsort/tempiOrdinamento_"+size_+"elementi"+sorted+pochiVal+".txt");
             for (int el : trialsSTLsort) {os << el << endl;}
             os.close();
         }
@@ -190,20 +198,25 @@ int main(int argc, char * argv[]) {
         }
                 
         if (algo.find("_IS_") != -1  or algo.find("_all_") != -1 ){
-             os.open("./Risultati/Insertionsort/tempiOrdinamento_"+size_+"elementi"+sorted+random+pochiVal+".txt");
+             os.open("./Risultati/Insertionsort/tempiOrdinamento_"+size_+"elementi"+sorted+pochiVal+".txt");
             for (int el : trialsInsertionsort) {os << el << endl;}
             os.close();
         }
         
-        /*
+        
         if (algo.find("_MS_") != -1  or algo.find("_all_") != -1 ){
-            os.open("./Risultati/Mergesort/tempiOrdinamento_"+size_+"elementi"+sorted+random+pochiVal+".txt");
+            os.open("./Risultati/Mergesort/tempiOrdinamento_"+size_+"elementi"+sorted+pochiVal+".txt");
             for (int el : trialsMergesort) {os << el << endl;}
             os.close();
         }
-         */
+        if (algo.find("_HS_") != -1  or algo.find("_all_") != -1 ){
+            os.open("./Risultati/Heapsort/tempiOrdinamento_"+size_+"elementi"+sorted+pochiVal+".txt");
+            for (int el : trialsHeapsort) {os << el << endl;}
+            os.close();
+        }
+         
     }
     
-    cout << "\n\n" << endl;
+    cout << endl;
     return 0;
 }
