@@ -13,13 +13,13 @@ Iterator partition(Iterator start, Iterator end, bool randomized){
     // se randomized scambio l'ultimo elemento nel vettore con uno casuale
     if (randomized == true) {
         std::iter_swap(
-                std::prev(end,1),
+                std::prev(end),
                 next(start, rand() % std::distance(start, end) )
                  );
     }
     
     //scelgo come pivot l'indice dell'ultimo elemento
-    Iterator pivot = std::prev(end,1);
+    Iterator pivot = std::prev(end);
     
     //metto a sx tutti i valori minori di pivot e a dx tutti quelli maggiori
     Iterator i = start;
@@ -37,7 +37,7 @@ void quicksort(Iterator start, Iterator end, bool randomized=false){
     if (distance(start,end) > 1) {
         Iterator q = partition(start, end, randomized);
         quicksort(start, q, randomized);
-        quicksort(q+1, end, randomized);
+        quicksort(std::next(q), end, randomized);
     }
 }
 

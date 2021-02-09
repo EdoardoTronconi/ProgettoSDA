@@ -9,8 +9,9 @@
 
 template <typename Iterator>
 void max_heapify(const Iterator start, const Iterator end, Iterator i){
-    Iterator leftChild = std::next(start, 2*(std::distance(start, i) + 1) - 1);
-    Iterator rightChild = std::next(start, 2*(std::distance(start, i) + 1 ) );
+    
+    Iterator leftChild = std::next(start, 2 * (std::distance(start, i) + 1 ) - 1);
+    Iterator rightChild = std::next(start, 2 * (std::distance(start, i) + 1 ) );
     
     Iterator largest;
     
@@ -24,19 +25,19 @@ void max_heapify(const Iterator start, const Iterator end, Iterator i){
     }
 }
 
-template <typename Iterator>
-void build_heap (const Iterator start, const Iterator end){
-    for (auto i = std::next(start, distance(start, end) / 2); i!=std::prev(start, 1); i-- ){
+template <typename BD_Iterator>
+void build_heap (const BD_Iterator start, const BD_Iterator end){
+    for (auto i = std::next(start, distance(start, end) / 2); i != std::prev(start); i--){
         max_heapify(start, end, i);
     }
 }
 
 
-template <typename Iterator>
-void heapsort (Iterator start, Iterator end){
+template <typename BD_Iterator>
+void heapsort (BD_Iterator start, BD_Iterator end){
     build_heap(start, end);
     auto endUnsorted = end;
-    for (auto i = std::prev(end,1); i!=start; i-- ){
+    for (auto i = std::prev(end); i!=start; i-- ){
         std::iter_swap(start, i);
         max_heapify(start, --endUnsorted, start);
     }

@@ -28,7 +28,7 @@ void merge(Iterator start, Iterator middle, Iterator end){
 template <class Iterator>
 inline void mergesort(Iterator start, Iterator end) {
     if (distance(start,end)>1){
-        Iterator middle = start + distance(start,end)/2;
+        Iterator middle = std::next(start, distance(start,end)/2);
         
         mergesort(start, middle);
         mergesort(middle, end);

@@ -1,18 +1,19 @@
 /*
  ORDINA ELEMENTI NEL RANGE [start, end)
-da: https://gist.github.com/svdamani/dc57e4d1b00342d4507d
  */
 
 #ifndef INSERTIONSORT
 #define INSERTIONSORT
 #include <algorithm>
 
-template <class Iterator>
-void insertionsort(Iterator begin, Iterator end) {
-    std::iter_swap(begin, std::min_element(begin, end));
-    for (Iterator b = begin; ++b < end; begin = b)
-        for (Iterator c = b; *c < *begin; --c, --begin)
-            std::iter_swap(begin, c);
+template <typename Iterator>
+void insertionsort(Iterator start, Iterator end){
+    for (auto j=std::next(start); j != end; j++){
+        auto key = *j;
+        Iterator i = std::prev(j);
+        while ( (std::distance(start, i) >= 0) and (*i > key) ) {*(std::next(i)) = *(i); i--;}
+        *(std::next(i)) = key;
+    }
 }
 
 #endif
