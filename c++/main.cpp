@@ -23,7 +23,7 @@ int main(int argc, char * argv[]) {
      
         '-trials=...'           -> ... = numero di prove (default 1)
         '-size=...'             -> ... = dimensione vettore (default 1000)
-        '-seed=...'             -> ... = seed generatore num casuali (o '-seed=time' per srand(time(NULL)) )
+        '-seed=...'             -> ... = seed generatore num casuali (o '-seed=rnd' per random device )
         '-algo=...'             -> ... = algoritmo da testare (opzioni: STL, QS, IS, MS, HS o '-algo=all' per testarli tutti (default))
     
         '--randomized' o '-r'   -> usa randomized quicksort (default false)
@@ -39,8 +39,8 @@ int main(int argc, char * argv[]) {
     
 //******************  Conversione argomenti main  *******************************************************************//
     
-    int trials=1, size=1000;
-    bool isRandom=false, isSorted=false, Print=false, fewUnique=false, verbose=false, debug=false;
+    int trials=1, size=1000, seed=0;
+    bool isRandom=false, isSorted=false, Print=false, fewUnique=false, verbose=false, debug=false, randomSeed=false;
     string algo="_all_";
     
     {
@@ -56,8 +56,8 @@ int main(int argc, char * argv[]) {
         if ( ( arg == "--verbose" ) or ( arg == "-v" ) ) {verbose=true;}
         if ( arg == "--debug" ) {debug = true;}
         if ( arg.find("-seed=") != -1 ) {
-            if (arg=="-seed=time") {srand(time(NULL));}
-            else {srand(stoi( arg.erase(arg.find("-seed="),6)));}
+            if (arg=="-seed=rnd") {randomSeed=true;}
+            else { seed = stoi( arg.erase(arg.find("-seed="),6));}
         }
         if ( arg.find("-algo=") != -1 ) {
             algo="";
@@ -80,16 +80,24 @@ int main(int argc, char * argv[]) {
     vector<long long> trialsMergesort;
     vector<long long> trialsHeapsort;
     
+    //Generatore di numeri casuali
+    mt19937_64 rng(seed);
+    if (randomSeed){
+        random_device rd;
+        rng.seed(rd());
+    }
+    
+    
     //Test ripetuto trials volte
     for (int trial=1; trial<=trials; trial++){
         
         // creo vettore da ordinare
         vector<double> vec_(size);
         if (fewUnique){
-            for (int i=0; i<size; i++) {vec_[i] = rand()%3;}
+            for (int i=0; i<size; i++) {vec_[i] = rng() % 3;}
         }
         else{
-            for (int i=0; i<size; i++) {vec_[i] = double(rand()) / RAND_MAX; }
+            for (int i=0; i<size; i++) {vec_[i] = double(rng()) / rng.max(); }
         }
         
         if(isSorted) {sort(vec_.begin(), vec_.end());}
