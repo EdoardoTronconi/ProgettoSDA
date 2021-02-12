@@ -28,6 +28,7 @@ int main(int argc, char * argv[]) {
     
         '--randomized' o '-r'   -> usa randomized quicksort (default false)
         '--sorted'     o '-s'   -> ordina un vettore già ordinato (default false)
+        '--reversed'            -> ordina un vettore già ordinato in modo decrescente (default false)
         '--file'       o '-f'   -> stampa su file il risultato (default false)
         '--verbose'    o '-v'   -> stampa su terminale riepilogo (default false)
         '--fewUnique'           -> ordina un vettore con pochi valori distinti (default false)
@@ -40,7 +41,7 @@ int main(int argc, char * argv[]) {
 //******************  Conversione argomenti main  *******************************************************************//
     
     int trials=1, size=1000, seed=0;
-    bool isRandom=false, isSorted=false, Print=false, fewUnique=false, verbose=false, debug=false, randomSeed=false;
+    bool isRandom=false, isSorted=false, isReversed=false, Print=false, fewUnique=false, verbose=false, debug=false, randomSeed=false;
     string algo="_all_";
     
     {
@@ -51,6 +52,7 @@ int main(int argc, char * argv[]) {
         if ( arg.find("-size=") != -1 ) {size = stoi(arg.erase(arg.find("-size="),6));}
         if ( (arg == "--randomized") or (arg=="-r") ) {isRandom = true;}
         if ( (arg == "--sorted") or (arg=="-s") ) {isSorted = true;}
+        if ( (arg == "--reversed") ) {isReversed=true;}
         if ( (arg == "--file") or (arg=="-f")) {Print = true;}
         if ( arg == "--fewUnique" ) {fewUnique = true;}
         if ( ( arg == "--verbose" ) or ( arg == "-v" ) ) {verbose=true;}
@@ -101,6 +103,7 @@ int main(int argc, char * argv[]) {
         }
         
         if(isSorted) {sort(vec_.begin(), vec_.end());}
+        if(isReversed) {sort(vec_.begin(), vec_.end()); reverse(vec_.begin(), vec_.end());}
         
         
         //STL sort
