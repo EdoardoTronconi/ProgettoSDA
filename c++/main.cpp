@@ -14,31 +14,29 @@
 
 using namespace std;
 
+/*
+ 
+ ARGOMENTI MAIN (non conta l'ordine)
+ 
+    '-trials=...'           -> ... = numero di prove (default 1)
+    '-size=...'             -> ... = dimensione vettore (default 1000)
+    '-seed=...'             -> ... = seed generatore num casuali (o '-seed=rnd' per random device )
+    '-algo=...'             -> ... = algoritmo da testare (opzioni: STL, QS, IS, MS, HS o '-algo=all' per testarli tutti (default))
+
+    '--randomized' o '-r'   -> usa randomized quicksort (default false)
+    '--sorted'     o '-s'   -> ordina un vettore già ordinato (default false)
+    '--reversed'            -> ordina un vettore già ordinato in modo decrescente (default false)
+    '--file'       o '-f'   -> stampa su file il risultato (default false)
+    '--verbose'    o '-v'   -> stampa su terminale riepilogo (default false)
+    '--fewUnique'           -> ordina un vettore con pochi valori distinti (default false)
+    '--debug'               -> controlla se gli algoritmi di ordinamento funzionano e stampa errore in caso contrario
+
+*/
+
 int main(int argc, char * argv[]) {
-    /*
     
-     USO ARGOMENTI!!!
-
-        * non conta l'ordine
-     
-        '-trials=...'           -> ... = numero di prove (default 1)
-        '-size=...'             -> ... = dimensione vettore (default 1000)
-        '-seed=...'             -> ... = seed generatore num casuali (o '-seed=rnd' per random device )
-        '-algo=...'             -> ... = algoritmo da testare (opzioni: STL, QS, IS, MS, HS o '-algo=all' per testarli tutti (default))
-    
-        '--randomized' o '-r'   -> usa randomized quicksort (default false)
-        '--sorted'     o '-s'   -> ordina un vettore già ordinato (default false)
-        '--reversed'            -> ordina un vettore già ordinato in modo decrescente (default false)
-        '--file'       o '-f'   -> stampa su file il risultato (default false)
-        '--verbose'    o '-v'   -> stampa su terminale riepilogo (default false)
-        '--fewUnique'           -> ordina un vettore con pochi valori distinti (default false)
-        '--debug'               -> controlla se gli algoritmi di ordinamento funzionano e stampa errore in caso contrario
-    
-     */
-
-    
-    
-//******************  Conversione argomenti main  *******************************************************************//
+        
+//***********  CONVERSIONE ARGOMENTI  *******************************************************************//
     
     int trials=1, size=1000, seed=0;
     bool isRandom=false, isSorted=false, isReversed=false, Print=false, fewUnique=false, verbose=false, debug=false, randomSeed=false;
@@ -47,6 +45,7 @@ int main(int argc, char * argv[]) {
     {
     vector<string> input;
     for (int i=1; i<argc; i++) { input.push_back(string(argv[i])); }
+        
     for (auto arg : input){
         if ( arg.find("-trials=") != -1 ) {trials = stoi(arg.erase(arg.find("-trials="),8));}
         if ( arg.find("-size=") != -1 ) {size = stoi(arg.erase(arg.find("-size="),6));}
@@ -73,14 +72,14 @@ int main(int argc, char * argv[]) {
     }
     }
 
-//*******************************************************************************************************************//
+//***********  TEST  ********************************************************************************************************//
     
     //Vettori per contenere i tempi di esecuzione
-    vector<long long> trialsSTLsort;
-    vector<long long> trialsInsertionsort;
-    vector<long long> trialsQuicksort;
-    vector<long long> trialsMergesort;
-    vector<long long> trialsHeapsort;
+    vector<long> trialsSTLsort;
+    vector<long> trialsInsertionsort;
+    vector<long> trialsQuicksort;
+    vector<long> trialsMergesort;
+    vector<long> trialsHeapsort;
     
     //Generatore di numeri casuali
     mt19937_64 rng(seed);
@@ -90,7 +89,7 @@ int main(int argc, char * argv[]) {
     }
     
     
-    //Test ripetuto trials volte
+    //Ripeto per Trials volte
     for (int trial=1; trial<=trials; trial++){
         
         // creo vettore da ordinare
@@ -102,74 +101,77 @@ int main(int argc, char * argv[]) {
             for (int i=0; i<size; i++) {vec_[i] = double(rng()) / rng.max(); }
         }
         
+        // Ordino se ho opzioni --sorted / --reversed
         if(isSorted) {sort(vec_.begin(), vec_.end());}
         if(isReversed) {sort(vec_.begin(), vec_.end()); reverse(vec_.begin(), vec_.end());}
         
         
         //STL sort
-        if (algo.find("_STL_") != -1  or algo.find("_all_") != -1 ){
+        if (algo.find("_STL_") != -1 or algo.find("_all_") != -1 ){
             auto vec = vec_;
             auto t1 = chrono::high_resolution_clock::now();
             sort(vec.begin(), vec.end());
             auto t2 = chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count();
-            
-            if (!is_sorted(vec.begin(), vec.end()) and debug) {cerr << "\nErrore: STLsort non ordinato";}
-            
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+                        
             trialsSTLsort.push_back(duration);
         }
          
         
         //InsertionSort
-        if (algo.find("_IS_") != -1  or algo.find("_all_") != -1 ){
+        if (algo.find("_IS_") != -1 or algo.find("_all_") != -1 ){
             auto vec = vec_;
             auto t1 = std::chrono::high_resolution_clock::now();
             insertionsort(vec.begin(), vec.end());
             auto t2 = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count();
-                
-            if (!is_sorted(vec.begin(), vec.end()) and debug) {cerr << "\nErrore: Insertionsort non ordinato";}
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+            
+            // se --debug controllo ordinamento
+            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr << "\nErrore: Insertionsort non ordinato";}
                 
             trialsInsertionsort.push_back(duration);
         }
          
         
         //Quicksort
-        if (algo.find("_QS_") != -1  or algo.find("_all_") != -1 ){
+        if (algo.find("_QS_") != -1 or algo.find("_all_") != -1 ){
             auto vec = vec_;
             auto t1 = chrono::high_resolution_clock::now();
             quicksort(vec.begin(), vec.end(), isRandom);
             auto t2 = chrono::high_resolution_clock::now();
-            auto duration = chrono::duration_cast<chrono::nanoseconds>( t2 - t1 ).count();
+            auto duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
             
-            if (!is_sorted(vec.begin(), vec.end()) and debug) {cerr << "\nErrore: Quicksort non ordinato";}
+            // se --debug controllo ordinamento
+            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr << "\nErrore: Quicksort non ordinato";}
             
             trialsQuicksort.push_back(duration);
         }
          
         
         //Mergesort
-        if (algo.find("_MS_") != -1  or algo.find("_all_") != -1 ){
+        if (algo.find("_MS_") != -1 or algo.find("_all_") != -1 ){
             auto vec = vec_;
             auto t1 = std::chrono::high_resolution_clock::now();
             mergesort(vec.begin(), vec.end());
             auto t2 = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
             
-            if (!is_sorted(vec.begin(), vec.end()) and debug) {cerr << "\nErrore: Mergesort non ordinato";}
+            // se --debug controllo ordinamento
+            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr << "\nErrore: Mergesort non ordinato";}
              
             trialsMergesort.push_back(duration);
         }
         
         //Heapsort
-        if (algo.find("_HS_") != -1  or algo.find("_all_") != -1 ){
+        if (algo.find("_HS_") != -1 or algo.find("_all_") != -1 ){
             auto vec = vec_;
             auto t1 = std::chrono::high_resolution_clock::now();
             heapsort(vec.begin(), vec.end());
             auto t2 = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
             
-            if (!is_sorted(vec.begin(), vec.end()) and debug) {cerr << "\nErrore: Heapsort non ordinato";}
+            // se --debug controllo ordinamento
+            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr << "\nErrore: Heapsort non ordinato";}
              
             trialsHeapsort.push_back(duration);
         }
@@ -177,17 +179,20 @@ int main(int argc, char * argv[]) {
         
     }
 
-    //stampo tempi medi su terminale
+
+//********  STAMPO RIEPILOGO SU TERMINALE  ***********************************************************************************************************//
+
     if (verbose){
-        if (algo.find("_STL_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio STLsort: "<< int(accumulate(trialsSTLsort.begin(), trialsSTLsort.end(), 0.) / trialsSTLsort.size())<<" ns";
-        if (algo.find("_IS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Insertionsort: "<< int(accumulate(trialsInsertionsort.begin(), trialsInsertionsort.end(), 0.) / trialsInsertionsort.size())<<" ns";
-        if (algo.find("_QS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Quicksort: "<< int(accumulate(trialsQuicksort.begin(), trialsQuicksort.end(), 0.) / trialsQuicksort.size())<<" ns";
-        if (algo.find("_MS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Mergesort: "<< int(accumulate(trialsMergesort.begin(), trialsMergesort.end(), 0.) / trialsMergesort.size())<<" ns";
-        if (algo.find("_HS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Heapsort: "<< int(accumulate(trialsHeapsort.begin(), trialsHeapsort.end(), 0.) / trialsHeapsort.size())<<" ns";
+        if (algo.find("_STL_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio STLsort: "<< int(accumulate(trialsSTLsort.begin(), trialsSTLsort.end(), 0.) / trialsSTLsort.size())<<" microsecondi";
+        if (algo.find("_IS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Insertionsort: "<< int(accumulate(trialsInsertionsort.begin(), trialsInsertionsort.end(), 0.) / trialsInsertionsort.size())<<" microsecondi";
+        if (algo.find("_QS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Quicksort: "<< int(accumulate(trialsQuicksort.begin(), trialsQuicksort.end(), 0.) / trialsQuicksort.size())<<" microsecondi";
+        if (algo.find("_MS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Mergesort: "<< int(accumulate(trialsMergesort.begin(), trialsMergesort.end(), 0.) / trialsMergesort.size())<<" microsecondi";
+        if (algo.find("_HS_") != -1  or algo.find("_all_") != -1 ) cout <<"\nTempo Medio Heapsort: "<< int(accumulate(trialsHeapsort.begin(), trialsHeapsort.end(), 0.) / trialsHeapsort.size())<<" microsecondi";
 
     }
     
-    //Output su file
+//********  STAMPO SU FILE  ***********************************************************************************************************//
+    
     if (Print) {
         string sorted = isSorted ? "_InputOrdinato" : "";
         string random = isRandom ? "_Randomized" : "";
@@ -228,6 +233,5 @@ int main(int argc, char * argv[]) {
          
     }
     
-    cout << endl;
     return 0;
 }
