@@ -84,7 +84,7 @@ int main(int argc, char * argv[]) {
         // creo vettore da ordinare
         vector<double> vec_(size);
         if (fewUnique){
-            for (int i=0; i<size; i++) {vec_[i] = rng() % 3;}
+            for (int i=0; i<size; i++) {vec_[i] = rng() % 2;}
         }
         else{
             for (int i=0; i<size; i++) {vec_[i] = double(rng()) / rng.max(); }
