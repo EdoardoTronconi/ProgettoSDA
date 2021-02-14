@@ -10,7 +10,7 @@
 template <typename Iterator>
 void max_heapify(const Iterator start, const Iterator end, Iterator i){
     
-    Iterator leftChild = std::next(start, 2 * (std::distance(start, i) + 1 ) - 1);
+    Iterator leftChild = std::next(start, 2 * (std::distance(start, i)) + 1);
     Iterator rightChild = std::next(start, 2 * (std::distance(start, i) + 1 ) );
     
     Iterator largest = i;
