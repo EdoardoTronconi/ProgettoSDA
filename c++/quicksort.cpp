@@ -14,9 +14,10 @@ Iterator partition(Iterator start, Iterator end, bool randomized){
     
     // se randomized scambio l'ultimo elemento nel vettore con uno casuale
     if (randomized == true) {
+        static std::mt19937_64 rnd(42);
         std::iter_swap(
                 std::prev(end),
-                next(start, rand() % std::distance(start, end) )
+                next(start, rnd() % std::distance(start, end) )
                  );
     }
     
@@ -57,24 +58,25 @@ std::pair<Iterator, Iterator> three_way_partition(Iterator start, Iterator end, 
     
     // se randomized scambio l'ultimo elemento nel vettore con uno casuale
     if (randomized == true) {
+        static std::mt19937_64 rnd(42);
         std::iter_swap(
                 std::prev(end),
-                next(start, rand() % std::distance(start, end) )
+                next(start, rnd() % std::distance(start, end) )
                  );
     }
     
-    const auto pivot = *std::prev(end);
+    Iterator pivot = std::prev(end);
 
     auto i = start, j = start, k = prev(end);
     while (j != k)
-        if (*j < pivot)
+        if (*j < *pivot)
             std::iter_swap(i++, j++);
-        else if (pivot < *j)
+        else if (*pivot < *j)
             std::iter_swap(j, --k);
         else
             ++j;
 
-    std::iter_swap(j++, prev(end));
+    std::iter_swap(j++, pivot);
     return {i, j};
 }
 
