@@ -5,7 +5,6 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
-#include <ctime>
 
 #include "quicksort.cpp"
 #include "mergesort.cpp"
@@ -26,9 +25,10 @@ using namespace std;
     '--randomized' o '-r'   -> usa randomized quicksort (default false)
     '--sorted'     o '-s'   -> ordina un vettore già ordinato (default false)
     '--reversed'            -> ordina un vettore già ordinato in modo decrescente (default false)
-    '--file'       o '-f'   -> stampa su file il risultato (default false)
-    '--verbose'    o '-v'   -> stampa su terminale riepilogo (default false)
     '--fewUnique'           -> ordina un vettore con pochi valori distinti (default false)
+ 
+    '--verbose'    o '-v'   -> stampa su terminale riepilogo (default false)
+    '--file'       o '-f'   -> stampa su file il risultato (default false)
     '--debug'               -> controlla se gli algoritmi di ordinamento funzionano e stampa errore in caso contrario
 
 */

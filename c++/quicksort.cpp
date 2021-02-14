@@ -45,6 +45,13 @@ void quicksort(Iterator start, Iterator end, bool randomized=false){
 
 //*******  3-WAY QUICKSORT **********************************************//
 
+/*
+[0 ... i-1 ; i ... j-1 ; j ... k-1 ; k ... ; pivot]
+    |           |           |           |
+    V           V           V           V
+ < pivot     = pivot      liberi    > pivot
+*/
+
 template <typename Iterator>
 std::pair<Iterator, Iterator> three_way_partition(Iterator start, Iterator end, bool randomized){
     
