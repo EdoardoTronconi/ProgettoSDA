@@ -1,5 +1,6 @@
 main:
 	make -s main.x
+
 qs:
 	make -s main_quicksort.x
 
