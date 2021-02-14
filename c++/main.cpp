@@ -23,6 +23,8 @@ using namespace std;
     '-algo=...'             -> ... = algoritmo da testare (opzioni: STL, QS, IS, MS, HS o '-algo=all' per testarli tutti (default))
 
     '--randomized' o '-r'   -> usa randomized quicksort (default false)
+    '--median'     o '-m'   -> usa metodo della mediana per pivot (default false)
+ 
     '--sorted'     o '-s'   -> ordina un vettore già ordinato (default false)
     '--reversed'            -> ordina un vettore già ordinato in modo decrescente (default false)
     '--fewUnique'           -> ordina un vettore con pochi valori distinti (default false)
@@ -39,7 +41,7 @@ int main(int argc, char * argv[]) {
 //***********  CONVERSIONE ARGOMENTI  *******************************************************************//
     
     int trials=1, size=1000, seed=0;
-    bool isRandom=false, isSorted=false, isReversed=false, Print=false, fewUnique=false, verbose=false, debug=false, randomSeed=false;
+    bool isRandom=false, median=false, isSorted=false, isReversed=false, Print=false, fewUnique=false, verbose=false, debug=false, randomSeed=false;
     string algo="_all_";
     
     {
@@ -50,6 +52,7 @@ int main(int argc, char * argv[]) {
         if ( arg.find("-trials=") != -1 ) {trials = stoi(arg.erase(arg.find("-trials="),8));}
         if ( arg.find("-size=") != -1 ) {size = stoi(arg.erase(arg.find("-size="),6));}
         if ( (arg == "--randomized") or (arg=="-r") ) {isRandom = true;}
+        if ( (arg == "--median") or (arg=="-m") ) {median = true;}
         if ( (arg == "--sorted") or (arg=="-s") ) {isSorted = true;}
         if ( (arg == "--reversed") ) {isReversed=true;}
         if ( (arg == "--file") or (arg=="-f")) {Print = true;}
@@ -133,7 +136,7 @@ int main(int argc, char * argv[]) {
         if (algo.find("_QS_") != -1 or algo.find("_all_") != -1 ){
             auto vec = vec_;
             auto t1 = chrono::high_resolution_clock::now();
-            quicksort(vec.begin(), vec.end(), isRandom);
+            quicksort(vec.begin(), vec.end(), isRandom, median);
             auto t2 = chrono::high_resolution_clock::now();
             auto duration = chrono::duration_cast<chrono::nanoseconds>( t2 - t1 ).count();
             
