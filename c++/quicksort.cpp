@@ -10,7 +10,7 @@
 
 //*******  STANDARD QUICKSORT **********************************************//
 template <typename Iterator>
-Iterator partition(Iterator start, Iterator end, bool randomized){
+Iterator partition(Iterator start, Iterator end, bool randomized, bool median){
     
     // se randomized scambio l'ultimo elemento nel vettore con uno casuale
     if (randomized == true) {
@@ -19,9 +19,28 @@ Iterator partition(Iterator start, Iterator end, bool randomized){
                 std::prev(end),
                 next(start, rnd() % std::distance(start, end) )
                  );
+        if (median and std::distance(start, end) > 3){
+            std::iter_swap(
+                    start,
+                    next(start, rnd() % std::distance(start, end) )
+                     );
+            std::iter_swap(
+                   next(start, std::distance(start, end) / 2),
+                   next(start, rnd() % std::distance(start, end) )
+                    );
+        }
     }
     
-    //scelgo come pivot l'indice dell'ultimo elemento
+    //scelgo come pivot l'ultimo elemento o la mediana(start, mid, end)
+    if (median)
+        iter_swap(
+                  std::max(
+                         std::min(  start  ,  std::prev(end) ),
+                         std::min(  std::max(start,end)  ,  next(start, std::distance(start, std::prev(end)) / 2))
+                         ),
+                  std::prev(end));
+    
+    
     Iterator pivot = std::prev(end);
     
     //metto a sx tutti i valori minori di pivot e a dx tutti quelli maggiori
@@ -36,11 +55,11 @@ Iterator partition(Iterator start, Iterator end, bool randomized){
 }
 
 template <typename Iterator>
-void quicksort(Iterator start, Iterator end, bool randomized=false){
+void quicksort(Iterator start, Iterator end, bool randomized=false, bool median=false){
     if (distance(start,end) > 1) {
-        Iterator q = partition(start, end, randomized);
-        quicksort(start, q, randomized);
-        quicksort(std::next(q), end, randomized);
+        Iterator q = partition(start, end, randomized, median);
+        quicksort(start, q, randomized, median);
+        quicksort(std::next(q), end, randomized, median);
     }
 }
 
@@ -54,7 +73,7 @@ void quicksort(Iterator start, Iterator end, bool randomized=false){
 */
 
 template <typename Iterator>
-std::pair<Iterator, Iterator> three_way_partition(Iterator start, Iterator end, bool randomized){
+std::pair<Iterator, Iterator> three_way_partition(Iterator start, Iterator end, bool randomized, bool median){
     
     // se randomized scambio l'ultimo elemento nel vettore con uno casuale
     if (randomized == true) {
@@ -63,8 +82,28 @@ std::pair<Iterator, Iterator> three_way_partition(Iterator start, Iterator end, 
                 std::prev(end),
                 next(start, rnd() % std::distance(start, end) )
                  );
+        if (median and std::distance(start, end) > 3){
+            std::iter_swap(
+                    start,
+                    next(start, rnd() % std::distance(start, end) )
+                     );
+            std::iter_swap(
+                   next(start, std::distance(start, end) / 2),
+                   next(start, rnd() % std::distance(start, end) )
+                    );
+        }
     }
     
+    //scelgo come pivot l'ultimo elemento o la mediana(start, mid, end)
+    if (median)
+        iter_swap(
+                  std::max(
+                         std::min(  start  ,  std::prev(end) ),
+                         std::min(  std::max(start,end)  ,  next(start, std::distance(start, std::prev(end)) / 2))
+                         ),
+                  std::prev(end));
+    
+ 
     Iterator pivot = std::prev(end);
 
     auto i = start, j = start, k = prev(end);
@@ -81,11 +120,11 @@ std::pair<Iterator, Iterator> three_way_partition(Iterator start, Iterator end, 
 }
 
 template <typename Iterator>
-void three_way_quicksort(Iterator start, Iterator end, bool randomized=false){
+void three_way_quicksort(Iterator start, Iterator end, bool randomized=false, bool median=false){
     if (distance(start,end) > 1) {
-        std::pair<Iterator,Iterator> q = three_way_partition(start, end, randomized);
-        three_way_quicksort(start, q.first, randomized);
-        three_way_quicksort(q.second, end, randomized);
+        std::pair<Iterator,Iterator> q = three_way_partition(start, end, randomized, median);
+        three_way_quicksort(start, q.first, randomized, median);
+        three_way_quicksort(q.second, end, randomized, median);
     }
 }
 
