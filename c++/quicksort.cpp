@@ -8,11 +8,17 @@
 #include <random>
 
 
+// median_iter(A, B, C) = Iteratore a mediana(*A, *B, *C)
+template <typename Iterator>
+Iterator median_iter(Iterator A, Iterator B, Iterator C);
+
+
+
 //*******  STANDARD QUICKSORT **********************************************//
 template <typename Iterator>
 Iterator partition(Iterator start, Iterator end, bool randomized, bool median){
     
-    // se randomized scambio l'ultimo elemento nel vettore con uno casuale
+    // se randomized scelgo casualmente il pivot
     if (randomized == true) {
         static std::mt19937_64 rnd(42);
         std::iter_swap(
@@ -31,15 +37,13 @@ Iterator partition(Iterator start, Iterator end, bool randomized, bool median){
         }
     }
     
-    //scelgo come pivot l'ultimo elemento o la mediana(start, mid, end)
-    if (median)
-        iter_swap(
-                  std::max(
-                         std::min(  start  ,  std::prev(end) ),
-                         std::min(  std::max(start,end)  ,  next(start, std::distance(start, std::prev(end)) / 2))
-                         ),
-                  std::prev(end));
-    
+    //scelgo come pivot l'ultimo elemento o la mediana(first, mid, last)
+    if (median and std::distance(start, end) > 3) {
+        std::iter_swap(
+                median_iter(start, std::next(start, std::distance(start, end) / 2), std::prev(end) ),
+                std::prev(end)
+                      );
+    }
     
     Iterator pivot = std::prev(end);
     
@@ -75,7 +79,7 @@ void quicksort(Iterator start, Iterator end, bool randomized=false, bool median=
 template <typename Iterator>
 std::pair<Iterator, Iterator> three_way_partition(Iterator start, Iterator end, bool randomized, bool median){
     
-    // se randomized scambio l'ultimo elemento nel vettore con uno casuale
+    // se randomized scelgo casualmente il pivot
     if (randomized == true) {
         static std::mt19937_64 rnd(42);
         std::iter_swap(
@@ -94,15 +98,13 @@ std::pair<Iterator, Iterator> three_way_partition(Iterator start, Iterator end, 
         }
     }
     
-    //scelgo come pivot l'ultimo elemento o la mediana(start, mid, end)
-    if (median)
-        iter_swap(
-                  std::max(
-                         std::min(  start  ,  std::prev(end) ),
-                         std::min(  std::max(start,end)  ,  next(start, std::distance(start, std::prev(end)) / 2))
-                         ),
-                  std::prev(end));
-    
+    //scelgo come pivot l'ultimo elemento o la mediana(first, mid, last)
+    if (median and std::distance(start, end) > 3) {
+        std::iter_swap(
+                median_iter(start, std::prev(end), std::next(start, std::distance(start, end) / 2) ),
+                std::prev(end)
+                      );
+    }
  
     Iterator pivot = std::prev(end);
 
@@ -127,5 +129,39 @@ void three_way_quicksort(Iterator start, Iterator end, bool randomized=false, bo
         three_way_quicksort(q.second, end, randomized, median);
     }
 }
+
+
+
+
+
+
+
+
+
+
+//******** Iteratore alla mediana di tre *************************************************************//
+template <typename Iterator>
+Iterator median_iter(Iterator A, Iterator B, Iterator C){
+    if (*A > *B)
+        {
+            if (*B > *C)
+                return B;
+            else if (*A > *C)
+                return C;
+            else
+                return A;
+        }
+        else
+        {
+            if (*A > *C)
+                return A;
+            else if (*B > *C)
+                return C;
+            else
+                return B;
+        }
+}
+
+
 
 #endif
