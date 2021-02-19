@@ -9,12 +9,6 @@
 #include <utility>
 
 
-// median_iter(A, B, C) = Iteratore a mediana(*A, *B, *C)
-template <typename Iterator>
-Iterator median_iter(Iterator A, Iterator B, Iterator C);
-
-
-
 //*******  STANDARD QUICKSORT **********************************************//
 
 template <typename Iterator>
@@ -70,6 +64,11 @@ void quicksort(Iterator start, Iterator end, bool randomized=false, bool median=
 }
 
 //*******  3-WAY QUICKSORT **********************************************//
+
+// median_iter(A, B, C) = Iteratore a mediana(*A, *B, *C)
+template <typename Iterator>
+Iterator median_iter(Iterator A, Iterator B, Iterator C);
+
 
 /*
 nel loop:
