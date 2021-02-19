@@ -6,6 +6,7 @@
 #define QUICKSORT
 
 #include <random>
+#include <utility>
 
 
 // median_iter(A, B, C) = Iteratore a mediana(*A, *B, *C)
@@ -15,6 +16,7 @@ Iterator median_iter(Iterator A, Iterator B, Iterator C);
 
 
 //*******  STANDARD QUICKSORT **********************************************//
+
 template <typename Iterator>
 Iterator partition(Iterator start, Iterator end, bool randomized, bool median){
     
@@ -25,7 +27,7 @@ Iterator partition(Iterator start, Iterator end, bool randomized, bool median){
                 std::prev(end),
                 next(start, rnd() % std::distance(start, end) )
                  );
-        if (median and std::distance(start, end) > 3){
+        if (median and std::distance(start, end) > 4){
             std::iter_swap(
                     start,
                     next(start, rnd() % std::distance(start, end) )
@@ -70,10 +72,18 @@ void quicksort(Iterator start, Iterator end, bool randomized=false, bool median=
 //*******  3-WAY QUICKSORT **********************************************//
 
 /*
+nel loop:
 [0 ... i-1 ; i ... j-1 ; j ... k-1 ; k ... ; pivot]
     |           |           |           |
     V           V           V           V
  < pivot     = pivot      liberi    > pivot
+ 
+output:
+[0 ... i-1 ; i ... j-1 ; j ... N]
+     |           |           |
+     V           V           V
+  < pivot     = pivot      > pivot
+
 */
 
 template <typename Iterator>

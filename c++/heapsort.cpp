@@ -26,7 +26,7 @@ void max_heapify(const Iterator start, const Iterator end, Iterator i){
 
 template <typename BD_Iterator>
 void build_heap (const BD_Iterator start, const BD_Iterator end){
-    for (auto i = std::next(start, distance(start, end) / 2); i != std::prev(start); i--){
+    for (auto i = std::next(start, distance(start, end) / 2); i-- != start;){
         max_heapify(start, end, i);
     }
 }

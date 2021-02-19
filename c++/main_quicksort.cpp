@@ -102,7 +102,7 @@ int main(int argc, char * argv[]) {
                         
             standardQS.push_back(duration);
             
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: standardQS non ordinato!";}
+            if (debug and !is_sorted(vec.begin(), vec.end()) ) cerr<<"\nErrore: standardQS non ordinato!";
         }
         
         //Median QS
@@ -115,7 +115,7 @@ int main(int argc, char * argv[]) {
                         
             medianQS.push_back(duration);
             
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: medianQS non ordinato!";}
+            if (debug and !is_sorted(vec.begin(), vec.end()) ) cerr<<"\nErrore: medianQS non ordinato!";
         }
          
         
@@ -129,7 +129,7 @@ int main(int argc, char * argv[]) {
                         
             randomizedQS.push_back(duration);
             
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: randomizedQS non ordinato!";}
+            if (debug and !is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: randomizedQS non ordinato!";
         }
         
         //Randomized Median QS
@@ -142,7 +142,7 @@ int main(int argc, char * argv[]) {
                         
             randomizedMedianQS.push_back(duration);
             
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: randomizedMedianQS non ordinato!";}
+            if (debug and !is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: randomizedMedianQS non ordinato!";
         }
          
         
@@ -156,7 +156,7 @@ int main(int argc, char * argv[]) {
                         
             threeWayQS.push_back(duration);
             
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: threeWayQS non ordinato!";}
+            if (debug and !is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: threeWayQS non ordinato!";
         }
          
         
@@ -170,7 +170,7 @@ int main(int argc, char * argv[]) {
                         
             randomizedThreeWayQS.push_back(duration);
             
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: randomizedThreeWayQS non ordinato!";}
+            if (debug and !is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: randomizedThreeWayQS non ordinato!";
         }
         
         //Randomized Median Three Way QS
@@ -183,7 +183,7 @@ int main(int argc, char * argv[]) {
                         
             randomizedMedianThreeWayQS.push_back(duration);
             
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: randomizedMedianThreeWayQS non ordinato!";}
+            if (debug and !is_sorted(vec.begin(), vec.end())) cerr<<"\nErrore: randomizedMedianThreeWayQS non ordinato!";
         }
     }
 

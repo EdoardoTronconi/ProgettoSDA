@@ -126,7 +126,7 @@ int main(int argc, char * argv[]) {
             auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count();
             
             // se --debug controllo ordinamento
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr << "\nErrore: Insertionsort non ordinato";}
+            if (debug and !is_sorted(vec.begin(), vec.end()) ) cerr << "\nErrore: Insertionsort non ordinato";
                 
             trialsInsertionsort.push_back(duration);
         }
@@ -141,7 +141,7 @@ int main(int argc, char * argv[]) {
             auto duration = chrono::duration_cast<chrono::nanoseconds>( t2 - t1 ).count();
             
             // se --debug controllo ordinamento
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr << "\nErrore: Quicksort non ordinato";}
+            if (debug and !is_sorted(vec.begin(), vec.end()) ) cerr << "\nErrore: Quicksort non ordinato";
             
             trialsQuicksort.push_back(duration);
         }
@@ -156,7 +156,7 @@ int main(int argc, char * argv[]) {
             auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count();
             
             // se --debug controllo ordinamento
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr << "\nErrore: Mergesort non ordinato";}
+            if (debug and !is_sorted(vec.begin(), vec.end()) ) cerr << "\nErrore: Mergesort non ordinato";
              
             trialsMergesort.push_back(duration);
         }
@@ -170,7 +170,7 @@ int main(int argc, char * argv[]) {
             auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count();
             
             // se --debug controllo ordinamento
-            if (debug) {if (!is_sorted(vec.begin(), vec.end())) cerr << "\nErrore: Heapsort non ordinato";}
+            if (debug and !is_sorted(vec.begin(), vec.end()) ) cerr << "\nErrore: Heapsort non ordinato";
              
             trialsHeapsort.push_back(duration);
         }

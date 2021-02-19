@@ -4,7 +4,7 @@
 
 #ifndef INSERTIONSORT
 #define INSERTIONSORT
-#include <algorithm>
+#include <iterator>
 
 template <typename Iterator>
 void insertionsort(Iterator start, Iterator end){
