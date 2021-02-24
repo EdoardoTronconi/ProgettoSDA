@@ -235,6 +235,6 @@ int main(int argc, char * argv[]) {
         os.close();
  
     }
-    cout << endl;
+    cout << "\n" << endl;
     return 0;
 }
